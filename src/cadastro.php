@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-Br">
+<html lang="pt-BR">
 <head>
     <?php include 'templates/header.php'; ?>
     <title>Cadastro de Cliente</title>
@@ -22,6 +22,7 @@
             </div>
             <button type="button" class="btn btn-primary" onclick="createCliente()">Salvar</button>
         </form>
+        <a href="index.php" class="btn btn-secondary mt-3">Voltar para a Página Inicial</a>
     </div>
     <?php include 'templates/footer.php'; ?>
 </body>
