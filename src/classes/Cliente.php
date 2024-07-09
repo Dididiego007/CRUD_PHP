@@ -1,47 +1,62 @@
 <?php
 
 class Cliente {
-    private $id;
-    private $nome;
-    private $email;
-    private $telefone;
+    private $conexao;
 
-    public function __construct($nome, $email, $telefone) {
-        $this->nome = $nome;
-        $this->email = $email;
-        $this->telefone = $telefone;
+    public function __construct() {
+        $this->conexao = new PDO('mysql:host=localhost;dbname=crud', 'root', '');
     }
 
-    public function getId() {
-        return $this->id;
+    private function getProximoId() {
+        $stmt = $this->conexao->prepare("SELECT id FROM clientes ORDER BY id ASC");
+        $stmt->execute();
+        $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $id = 1;
+        foreach ($clientes as $cliente) {
+            if ($cliente['id'] != $id) {
+                return $id;
+            }
+            $id++;
+        }
+        return $id;
     }
 
-    public function setId($id) {
-        $this->id = $id;
+    public function criar($nome, $email, $telefone) {
+        $id = $this->getProximoId();
+        $stmt = $this->conexao->prepare("INSERT INTO clientes (id, nome, email, telefone) VALUES (:id, :nome, :email, :telefone)");
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telefone', $telefone);
+        return $stmt->execute();
     }
 
-    public function getNome() {
-        return $this->nome;
+    public function ler($id) {
+        $stmt = $this->conexao->prepare("SELECT * FROM clientes WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function setNome($nome) {
-        $this->nome = $nome;
+    public function atualizar($id, $nome, $email, $telefone) {
+        $stmt = $this->conexao->prepare("UPDATE clientes SET nome = :nome, email = :email, telefone = :telefone WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telefone', $telefone);
+        return $stmt->execute();
     }
 
-    public function getEmail() {
-        return $this->email;
+    public function deletar($id) {
+        $stmt = $this->conexao->prepare("DELETE FROM clientes WHERE id = :id");
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
     }
 
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
-    public function getTelefone() {
-        return $this->telefone;
-    }
-
-    public function setTelefone($telefone) {
-        $this->telefone = $telefone;
+    public function lerTodos() {
+        $stmt = $this->conexao->prepare("SELECT * FROM clientes ORDER BY id ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

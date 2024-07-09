@@ -1,0 +1,34 @@
+body {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.card-header, .card-body {
+    color: #f8f9fa;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.table-dark th, .table-dark td, .table-dark thead th {
+    border-color: #454d55;
+}
+
+.table-dark tbody tr:hover {
+    background-color: #495057;
+}
+
+.form-control.bg-dark {
+    background-color: #495057;
+    color: #f8f9fa;
+    border: 1px solid #ced4da;
+}
+
+.form-control.bg-dark:focus {
+    background-color: #495057;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
