@@ -1,8 +1,9 @@
 <?php
 require_once 'Cliente.php';
 
+$termo = $_GET['termo'];
 $cliente = new Cliente();
-$clientes = $cliente->lerTodos();
+$clientes = $cliente->lerTodos($termo);
 
 foreach ($clientes as $cliente) {
     echo '<tr>';

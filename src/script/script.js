@@ -1,8 +1,9 @@
 $(document).ready(function() {
-    function carregarClientes() {
+    function carregarClientes(searchTerm = '') {
         $.ajax({
             url: 'classes/cliente_read.php',
             type: 'GET',
+            data: { termo: searchTerm },
             beforeSend: function() {
                 $('#clientesTable tbody').html('<tr><td colspan="5" class="text-center"><i class="fas fa-spinner fa-spin"></i> Carregando...</td></tr>');
             },
@@ -11,8 +12,16 @@ $(document).ready(function() {
             }
         });
     }
-
     carregarClientes();
+    
+    $('#searchButton').on('click', function() {
+        var searchTerm = $('#pesquisaInput').val();
+        carregarClientes(searchTerm);
+    });
+
+    $('#pesquisaForm').on('submit', function(e) {
+        e.preventDefault();
+    });
 
     $('#clienteForm').on('submit', function(e) {
         e.preventDefault();
@@ -58,6 +67,8 @@ $(document).ready(function() {
             });
         }
     });
+   
+
 
     $('#cancelar').on('click', function() {
         $('#clienteForm')[0].reset();

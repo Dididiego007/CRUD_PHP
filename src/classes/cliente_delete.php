@@ -1,12 +1,17 @@
 <?php
 require_once 'Cliente.php';
 
-$cliente = new Cliente();
-$id = $_POST['id'];
+if (isset($_POST['id'])) {
+    $cliente = new Cliente();
+    $id = $_POST['id'];
 
-if ($cliente->deletar($id)) {
-    echo 'Cliente deletado com sucesso!';
+    if ($cliente->deletar($id)) {
+        $cliente->atualizarIds($id);
+        echo json_encode(['status' => 'success', 'message' => 'Cliente deletado com sucesso!']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Erro ao deletar cliente.']);
+    }
 } else {
-    echo 'Erro ao deletar cliente.';
+    echo json_encode(['status' => 'error', 'message' => 'ID do cliente não foi enviado.']);
 }
 ?>

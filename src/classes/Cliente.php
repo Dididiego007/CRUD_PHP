@@ -5,20 +5,14 @@ class Cliente {
 
     public function __construct() {
         $this->conexao = new PDO('mysql:host=localhost;dbname=crud', 'root', '');
+        $this->conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     private function getProximoId() {
-        $stmt = $this->conexao->prepare("SELECT id FROM clientes ORDER BY id ASC");
+        $stmt = $this->conexao->prepare("SELECT MAX(id) as max_id FROM clientes");
         $stmt->execute();
-        $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $id = 1;
-        foreach ($clientes as $cliente) {
-            if ($cliente['id'] != $id) {
-                return $id;
-            }
-            $id++;
-        }
-        return $id;
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['max_id'] + 1;
     }
 
     public function criar($nome, $email, $telefone) {
@@ -52,11 +46,29 @@ class Cliente {
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
+    public function atualizarIds($id) {
+        $stmt = $this->conexao->prepare("UPDATE clientes SET id = id - 1 WHERE id > :id");
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
 
-    public function lerTodos() {
-        $stmt = $this->conexao->prepare("SELECT * FROM clientes ORDER BY id ASC");
+    public function pesquisar($termo) {
+        $stmt = $this->conexao->prepare("SELECT * FROM clientes WHERE nome LIKE :termo OR email LIKE :termo OR telefone LIKE :termo");
+        $termoParam = '%' . $termo . '%';
+        $stmt->bindParam(':termo', $termoParam);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function lerTodos($termo = '') {
+        if (!empty($termo)) {
+            return $this->pesquisar($termo);
+        } else {
+            $stmt = $this->conexao->prepare("SELECT * FROM clientes ORDER BY id ASC");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
 }
+
 ?>
