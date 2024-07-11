@@ -9,16 +9,18 @@ $email = $_POST['email'];
 $telefone = $_POST['telefone'];
 
 if ($id) {
-    if ($cliente->atualizar($id, $nome, $email, $telefone)) {
+    $resultado = $cliente->atualizar($id, $nome, $email, $telefone);
+    if ($resultado === true) {
         echo 'Cliente atualizado com sucesso!';
     } else {
-        echo 'Erro ao atualizar cliente.';
+        echo 'Erro ao atualizar cliente: ' . $resultado; 
     }
 } else {
-    if ($cliente->criar($nome, $email, $telefone)) {
+    $resultado = $cliente->criar($nome, $email, $telefone);
+    if ($resultado === true) {
         echo 'Cliente criado com sucesso!';
     } else {
-        echo 'Erro ao criar cliente.';
+        echo 'Erro ao criar cliente: ' . $resultado; 
     }
 }
 ?>

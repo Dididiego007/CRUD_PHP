@@ -67,6 +67,30 @@ $(document).ready(function() {
             });
         }
     });
+
+    $('#clienteForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        var id = $('#id').val();
+        var url = id ? 'classes/cliente_create_update.php' : 'classes/cliente_create.php';
+        var data = $(this).serialize();
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            success: function(response) {
+                if (response.startsWith('Erro')) {
+                    alert(response); // Exibe a mensagem de erro
+                } else {
+                    alert(response); // Exibe uma mensagem de sucesso ou outra lógica
+                    $('#clienteForm')[0].reset();
+                    $('#id').val('');
+                    carregarClientes(); // Recarrega a lista de clientes após o sucesso
+                }
+            }
+        });
+    });
    
 
 
